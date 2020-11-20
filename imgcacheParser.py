@@ -57,6 +57,7 @@ import struct
 import datetime
 import hashlib
 from optparse import OptionParser
+import binascii
 
 version_string = "imgcache-parse-mod.py v2016-08-03"
 
@@ -117,7 +118,10 @@ for hit in hits:
 
     fb.seek(hit)
     fb.seek(hit-4) # record size occurs 4 bytes before path
-    recsize = struct.unpack("<I", fb.read(4))[0] # size does NOT include these 4 bytes. From start of path string to xFFD9 at end of JPG file
+    picX = fb.read(4)
+    #print(picX.decode("utf-16"))
+    #print(binascii.unhexlify(picX))
+    recsize = struct.unpack("<I", picX)[0] # size does NOT include these 4 bytes. From start of path string to xFFD9 at end of JPG file
     jpgend = hit + recsize + 1 # should point to the byte after FFD9
     if (jpgend > filesize + 1):
         print("Bad end of JPG offset calculated for JPG starting at " + hex(hit).rstrip("L").upper() + " ... skipping!\n")
