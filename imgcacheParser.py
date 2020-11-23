@@ -57,7 +57,6 @@ import struct
 import datetime
 import hashlib
 from optparse import OptionParser
-import binascii
 
 version_string = "imgcache-parse-mod.py v2016-08-03"
 
@@ -77,7 +76,7 @@ usage = " %prog -f inputfile -o outputfile"
 
     
 # Open imgcache file for binary read
-filename="imgcache[1].0"
+filename="C:\\Users\\Air\\Desktop\\imgCacheParser\\imgcache[1].0"
 htmlfile="output.html"
 try:
 	fb = open(filename, "rb")
@@ -89,7 +88,7 @@ filesize = os.stat(filename).st_size # get imgcache filesize
 
 # Read file into one BINARY string (shouldn't be too large)
 filestring = fb.read()
-print(filestring)
+# print(filestring)
 # Search the binary string for the hex equivalent of "/local/image/item/" which appears in each imgcache record
 substring1 = "\x2F\x00\x6C\x00\x6F\x00\x63\x00\x61\x00\x6C\x00\x2F\x00\x69\x00\x6D\x00\x61\x00\x67\x00\x65\x00\x2F\x00\x69\x00\x74\x00\x65\x00\x6D\x00\x2F\x00".encode()
 print(substring1)
@@ -118,11 +117,11 @@ for hit in hits:
 
     fb.seek(hit)
     fb.seek(hit-4) # record size occurs 4 bytes before path
-    picX = fb.read(4)
-    #print(picX.decode("utf-16"))
-    #print(binascii.unhexlify(picX))
-    recsize = struct.unpack("<I", picX)[0] # size does NOT include these 4 bytes. From start of path string to xFFD9 at end of JPG file
+    picSize = fb.read(4)
+    recsize = struct.unpack("<I", picSize)[0] # size does NOT include these 4 bytes. From start of path string to xFFD9 at end of JPG file
+    print("JPG Size: "+str(recsize))
     jpgend = hit + recsize + 1 # should point to the byte after FFD9
+    print("JPG End: "+str(jpgend))
     if (jpgend > filesize + 1):
         print("Bad end of JPG offset calculated for JPG starting at " + hex(hit).rstrip("L").upper() + " ... skipping!\n")
         break
@@ -141,12 +140,14 @@ for hit in hits:
         if (readint == 0xD8FF): # Have run into the LE xFFxD8 JPG Header
             jpgfound = True
             jpgstart = fb.tell()-2
+            print("JPG Start: "+str(jpgstart))
             break
 
     if (jpgfound):
         #print("hit = " + hex(hit).rstrip("L").upper() + ", end = " + hex(jpgstart-8).rstrip("L").upper())
         pathname = filestring[hit:jpgstart-8].decode('utf-16-le')
         print("pathname = " + pathname)
+        print("pathname Size = " + str(len(pathname)))
     else:
         continue # skip
         
@@ -164,6 +165,7 @@ for hit in hits:
     # Extract JPG to file
     if (jpgstart > 0):
         rawjpgoutput = filestring[jpgstart:jpgend]
+        print("Raw output len: "+str(len(rawjpgoutput)))
         # filename = input imgcache filename + JPG start hex offset + decimal UNIX timestamp string + human readable timestamp in UTC
         if ("video" in pathname):
             outputfilename = filename + "_vid_" + hex(jpgstart).rstrip("L").upper() + "_" + str(timestamp) + "_" + timestring + ".jpg"
