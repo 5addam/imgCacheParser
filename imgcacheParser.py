@@ -76,7 +76,11 @@ usage = " %prog -f inputfile -o outputfile"
 
     
 # Open imgcache file for binary read
+<<<<<<< HEAD
 filename="C:\\Users\\Air\\Desktop\\imgCacheParser\\imgcache[1].0"
+=======
+filename="C:\\Users\\mufassirmughal\\Desktop\\imgCacheParser\\imgcache[1].0"
+>>>>>>> 45d37391cae0f982293a0b27b3832c005baecdc7
 htmlfile="output.html"
 try:
 	fb = open(filename, "rb")
@@ -91,8 +95,8 @@ filestring = fb.read()
 # print(filestring)
 # Search the binary string for the hex equivalent of "/local/image/item/" which appears in each imgcache record
 substring1 = "\x2F\x00\x6C\x00\x6F\x00\x63\x00\x61\x00\x6C\x00\x2F\x00\x69\x00\x6D\x00\x61\x00\x67\x00\x65\x00\x2F\x00\x69\x00\x74\x00\x65\x00\x6D\x00\x2F\x00".encode()
-print(substring1)
-print(substring1.decode())
+# print(substring1)
+# print(substring1.decode())
 # Search for hex equivalent of "/local/video/item/" 
 substring2 = "\x2F\x00\x6C\x00\x6F\x00\x63\x00\x61\x00\x6C\x00\x2F\x00\x76\x00\x69\x00\x64\x00\x65\x00\x6F\x00\x2F\x00\x69\x00\x74\x00\x65\x00\x6D\x00\x2F\x00".encode()
 
@@ -117,9 +121,16 @@ for hit in hits:
 
     fb.seek(hit)
     fb.seek(hit-4) # record size occurs 4 bytes before path
+<<<<<<< HEAD
     picSize = fb.read(4)
     recsize = struct.unpack("<I", picSize)[0] # size does NOT include these 4 bytes. From start of path string to xFFD9 at end of JPG file
     print("JPG Size: "+str(recsize))
+=======
+    picX = fb.read(4)
+    print("Byte Value: "+ str(picX))
+    #print(binascii.unhexlify(picX))
+    recsize = struct.unpack("<I", picX)[0] # size does NOT include these 4 bytes. From start of path string to xFFD9 at end of JPG file
+>>>>>>> 45d37391cae0f982293a0b27b3832c005baecdc7
     jpgend = hit + recsize + 1 # should point to the byte after FFD9
     print("JPG End: "+str(jpgend))
     if (jpgend > filesize + 1):
@@ -140,7 +151,11 @@ for hit in hits:
         if (readint == 0xD8FF): # Have run into the LE xFFxD8 JPG Header
             jpgfound = True
             jpgstart = fb.tell()-2
+<<<<<<< HEAD
             print("JPG Start: "+str(jpgstart))
+=======
+            print("jpg start: "+str(jpgstart))
+>>>>>>> 45d37391cae0f982293a0b27b3832c005baecdc7
             break
 
     if (jpgfound):
@@ -221,5 +236,4 @@ outputHTML.write("</table></html>")
 outputHTML.close()
 
 print("Processed " + str(len(outputdict.keys())) + " cached pictures. Exiting ...\n")
-
 
