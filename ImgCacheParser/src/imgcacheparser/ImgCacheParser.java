@@ -5,16 +5,6 @@
  */
 package imgcacheparser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  *
  * @author Air
@@ -25,9 +15,11 @@ public class ImgCacheParser {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       ImageRecovery rm = new ImageRecovery();
-       rm.recoverImages();
-       rm.displayData();
+//       ImageRecovery rm = new ImageRecovery();
+//       rm.recoverImages();
+//       rm.displayData();
+        ThumbnailsRecovery tr = new ThumbnailsRecovery();
+        tr.recoverImages();
         // TODO code application logic here
     }
 }
