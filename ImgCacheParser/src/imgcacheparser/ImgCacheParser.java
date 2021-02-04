@@ -5,21 +5,26 @@
  */
 package imgcacheparser;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Air
  */
 public class ImgCacheParser {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
+   
 //       ImageRecovery rm = new ImageRecovery();
 //       rm.recoverImages();
 //       rm.displayData();
         ThumbnailsRecovery tr = new ThumbnailsRecovery();
-        tr.recoverImages();
+        tr.startScan();
+
+
         // TODO code application logic here
+       
     }
+    
+   
 }
